@@ -59,6 +59,46 @@
 
 <script>
 
+  function initializeMap(keyList, audioList) {
+    const map = new Map();
+    let i = 0;
+
+    keyList.forEach(key => {
+      let audio = audioList[i];
+      map.set(key.innerHTML, audio);
+      i++;
+    });
+
+    console.assert(map.size > 0, "Map cannot be empty.");
+    return map;
+  }
+
+  function addAudio(map) {
+    window.addEventListener("keydown", event => {
+      const key = event.key.toUpperCase();
+      let audio = map.get(key);
+      if (audio != undefined) {
+        audio.play();
+        const keyElement = document.querySelector(`div[data-key="${event.keyCode}"]`);
+        keyElement.classList.add("playing");
+      }
+    });
+  }
+
+  function removeGlow() {
+    const keyList = document.querySelectorAll(".key");
+    keyList.forEach(key => 
+      key.addEventListener("transitionend", e => {
+        console.log("working")
+        key.classList.remove("playing")})
+    );
+  }
+
+  const keyList = document.querySelectorAll("kbd");
+  const audioList = document.querySelectorAll("audio");
+  const map = initializeMap(keyList, audioList);
+  addAudio(map);
+  removeGlow();
 </script>
 
 
